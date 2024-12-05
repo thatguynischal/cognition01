@@ -20,13 +20,12 @@ loginRouter.post("/register", async (req, res) => {
     const user = await User.create({name, email, password: hashedPassword});
 
     if (user) {
-        res.status(201).json({_id: user.id, name: user.name, email: user.email});
+        res.status(201).json({_id: user.id, name: user.name, email: user.email, status: 'success'});
     } else {
         res.status(400).json({message: "Invalid user data"});
     }
 });
 
-// Login User
 loginRouter.post("/login", async (req, res) => {
     const {email, password} = req.body;
 
@@ -38,7 +37,7 @@ loginRouter.post("/login", async (req, res) => {
 
     if (user && (await bcrypt.compare(password, user.password))) {
         const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: "30d"});
-        res.json({_id: user.id, name: user.name, email: user.email, token});
+        res.json({_id: user.id, name: user.name, email: user.email, token, status: 'success'});
     } else {
         res.status(400).json({message: "Invalid credentials"});
     }
