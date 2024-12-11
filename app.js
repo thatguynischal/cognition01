@@ -1,11 +1,11 @@
-const express = require('express');
-const config = require('./utils/config')
+import express from 'express';
+import cors from 'cors';
+import config from './utils/config.js';
 const app = express();
-const cors = require('cors');
-const middleware = require('./utils/middleware');
-const logger = require('./utils/logger')
-const mongoose = require('mongoose')
-const loginRouter = require('./controllers/login')
+import middleware from './utils/middleware.js';
+import logger from './utils/logger.js';
+import mongoose from 'mongoose'
+import loginRouter from './controllers/login.js'
 
 mongoose.set('strictQuery', false)
 
@@ -29,4 +29,4 @@ app.use('/api/', loginRouter)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
-module.exports = app; // Export the app instance directly
+export default app; // Export the app instance directly
