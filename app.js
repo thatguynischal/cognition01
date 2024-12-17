@@ -5,7 +5,7 @@ const app = express();
 import middleware from './utils/middleware.js';
 import logger from './utils/logger.js';
 import mongoose from 'mongoose'
-import loginRouter from './controllers/login.js'
+import authRouter from "./routes/authRoutes.js";
 
 mongoose.set('strictQuery', false)
 
@@ -23,10 +23,8 @@ mongoose.connect(config.MONGODB_URI)
 app.use(cors());
 app.use(express.json())
 app.use(middleware.requestLogger)
-
-app.use('/api/', loginRouter)
-
+app.use('/api/', authRouter)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
-export default app; // Export the app instance directly
+export default app;
