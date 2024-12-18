@@ -56,15 +56,15 @@ export const loginUser = async (email, password) => {
     const user = await User.findOne({email});
 
     if (!user) {
-        return helpers.sendResponse(res, "error", 400, "Invalid credentials");
+        throw {status: 400, message: "Invalid credentials."};
     }
 
     if (!user.verified) {
-        return helpers.sendResponse(res, "error", 403, "Please verify your email before logging in.");
+        throw {status: 403, message: "Please verify your email before logging in."};
     }
 
     if (!(await bcrypt.compare(password, user.password))) {
-        return helpers.sendResponse(res, "error", 400, "Invalid credentials");
+        throw {status: 400, message: "Invalid credentials."};
     }
 
     const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: "30d"});
@@ -75,7 +75,7 @@ export const forgotPassword = async (email) => {
     const user = await User.findOne({email});
 
     if (!user) {
-        return  helpers.sendResponse(res, "error", 400, "User with this email does not exist.");
+        throw {status: 400, message: "User with this email does not exist."};
     }
 
     const resetToken = uuidv4();
