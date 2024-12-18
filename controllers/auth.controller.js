@@ -1,4 +1,4 @@
-import {forgotPassword, loginUser, registerUser, verifyUser} from '../services/auth.service.js';
+import {forgotPassword, loginUser, registerUser, resetPassword, verifyUser} from '../services/auth.service.js';
 import {sendPasswordResetEmail, sendVerificationEmail} from '../services/email.service.js';
 import helpers from '../utils/helpers.js';
 
@@ -59,7 +59,26 @@ export const forgotPasswordController = async (req, res) => {
             return helpers.sendResponse(res, "error", error.status, error.message);
         } else {
             return helpers.sendResponse(res, "error", 500, "Server error");
-        }    }
+        }
+    }
 };
 
-export default {registerController, verifyController, loginController, forgotPasswordController};
+export const resetPasswordController = async (req, res) => {
+    try {
+        const {token, password, confirmPassword} = req.body;
+        await resetPassword(token, password, confirmPassword)
+        return helpers.sendResponse(res, "success", 200, "Password reset successfull.");
+
+    } catch (error) {
+        console.error(error);
+        if (error.status && error.message) {
+            return helpers.sendResponse(res, "error", error.status, error.message);
+        } else {
+            return helpers.sendResponse(res, "error", 500, "Server error");
+        }
+    }
+}
+
+export default {
+    registerController, verifyController, loginController, forgotPasswordController, resetPasswordController
+};

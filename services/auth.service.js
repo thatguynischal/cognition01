@@ -4,7 +4,6 @@ import PasswordReset from "../models/passwordReset.js"; // Import the PasswordRe
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import {v4 as uuidv4} from 'uuid';
-import helpers from '../utils/helpers.js';
 
 export const registerUser = async (name, email, password) => {
     if (!name || !email || !password) {
@@ -38,12 +37,12 @@ export const verifyUser = async (uniqueString) => {
     const verificationRecord = await UserVerification.findOne({uniqueString});
 
     if (!verificationRecord) {
-        return helpers.sendResponse(res, "error", 400, "Invalid or expired token");
+        throw {status: 400, message: "Invalid or expired token."};
     }
 
     if (new Date() > verificationRecord.expiresAt) {
         await UserVerification.deleteOne({_id: verificationRecord._id});
-        return helpers.sendResponse(res, "error", 400, "Token has expired. Please register again.");
+        throw {status: 400, message: "Token has expired. Please register again."};
     }
 
     await User.updateOne({_id: verificationRecord.userId}, {verified: true});
@@ -86,4 +85,30 @@ export const forgotPassword = async (email) => {
     await PasswordReset.create({userId: user._id, resetToken, createdAt, expiresAt});
 
     return resetToken;
+};
+
+export const resetPassword = async (token, password, confirmPassword) => {
+
+    if (password !== confirmPassword) {
+        throw {status: 400, message: "Passwords do not match."};
+    }
+
+    const tokenStatus = await PasswordReset.findOne({resetToken: token});
+
+    if (!tokenStatus) {
+        throw {status: 400, message: "Invalid or expired token."};
+    }
+
+    if (new Date() > tokenStatus.expiresAt) {
+        await PasswordReset.deleteOne({_id: tokenStatus._id});
+        throw {status: 400, message: "Token has expired. Please request a new password reset."};
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await User.findByIdAndUpdate(tokenStatus.userId, {password: hashedPassword}, {new: true});
+
+    await PasswordReset.deleteOne({_id: tokenStatus._id});
+
+    return true;
 };
