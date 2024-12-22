@@ -10,7 +10,7 @@ import {
 const authRouter = Router();
 
 authRouter.post("/register", registerController);
-authRouter.post("/verify", verifyController);
+authRouter.get("/verify/:uniqueString", verifyController);
 authRouter.post("/login", loginController);
 authRouter.post("/forgot-password", forgotPasswordController);
 authRouter.post("/reset-password", resetPasswordController)
