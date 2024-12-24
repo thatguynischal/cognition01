@@ -25,6 +25,15 @@ export const sendVerificationEmail = async (email, uniqueString) => {
     });
 };
 
+export const reSendVerificationEmail = async (email, uniqueString) => {
+    const verificationUrl = `${process.env.FRONTEND_URL}/verify/${uniqueString}`;
+    await transporter.sendMail({
+        to: email,
+        subject: "Email Verification",
+        html: `<p>This is a new verification token. Please click <a href="${verificationUrl}">here</a> to verify your account.</p>`
+    });
+};
+
 export const sendPasswordResetEmail = async (email, resetToken) => {
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
     await transporter.sendMail({

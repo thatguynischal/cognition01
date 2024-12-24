@@ -1,5 +1,12 @@
-import {forgotPassword, loginUser, registerUser, resetPassword, verifyUser} from '../services/auth.service.js';
-import {sendPasswordResetEmail, sendVerificationEmail} from '../services/email.service.js';
+import {
+    forgotPassword,
+    loginUser,
+    registerUser,
+    resendVerification,
+    resetPassword,
+    verifyUser
+} from '../services/auth.service.js';
+import {sendPasswordResetEmail, sendVerificationEmail, reSendVerificationEmail} from '../services/email.service.js';
 import helpers from '../utils/helpers.js';
 
 export const registerController = async (req, res) => {
@@ -32,6 +39,24 @@ export const verifyController = async (req, res) => {
             return helpers.sendResponse(res, "error", 500, "Server error");
         }    }
 };
+
+export const resendVerificationController = async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await resendVerification(email);
+        console.log("nischal", user)
+        await reSendVerificationEmail(user.email, user.verification.uniqueString);
+        return helpers.sendResponse(res, "success", 200, "New verification link has been sent to your email.");
+    } catch (error) {
+        console.error(error);
+        if (error.status && error.message) {
+            return helpers.sendResponse(res, "error", error.status, error.message);
+        } else {
+            return helpers.sendResponse(res, "error", 500, "Server error");
+        }
+    }
+}
+
 
 export const loginController = async (req, res) => {
     try {

@@ -51,6 +51,36 @@ export const verifyUser = async (uniqueString) => {
     return true;
 };
 
+export const resendVerification = async (verificationEmail) => {
+
+    const user = await User.findOne({email: verificationEmail});
+    if (!user) {
+        throw {status: 400, message: "No user found. Please check your email again."};
+    }
+
+    console.log("user ho", user)
+
+    const verificationRecord = await UserVerification.findOne({userId: user._id});
+
+    console.log("verificationRecord", verificationRecord);
+    if (verificationRecord) {
+        await UserVerification.deleteOne({_id: verificationRecord._id});
+    }
+
+    const uniqueString = uuidv4();
+    const createdAt = new Date();
+    const expiresAt = new Date(createdAt);
+    expiresAt.setHours(expiresAt.getHours() + 24);
+
+    const verification = await UserVerification.create({
+        userId: user._id, uniqueString, createdAt, expiresAt,
+    });
+
+
+    return {...user.toJSON(), verification};
+
+}
+
 export const loginUser = async (email, password) => {
     const user = await User.findOne({email});
 
