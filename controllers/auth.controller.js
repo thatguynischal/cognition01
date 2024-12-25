@@ -44,7 +44,6 @@ export const resendVerificationController = async (req, res) => {
     try {
         const { email } = req.body;
         const user = await resendVerification(email);
-        console.log("nischal", user)
         await reSendVerificationEmail(user.email, user.verification.uniqueString);
         return helpers.sendResponse(res, "success", 200, "New verification link has been sent to your email.");
     } catch (error) {

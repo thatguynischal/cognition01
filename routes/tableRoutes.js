@@ -1,9 +1,11 @@
 import {Router} from "express";
-import {newTableController, getTable} from "../controllers/table.controller.js";
+import {deleteTableController, getTableController, newTableController} from "../controllers/table.controller.js";
 
 const tableRouter = Router();
 
 tableRouter.post('/create-new-table', newTableController);
-tableRouter.get('/table-list', getTable);
+tableRouter.get('/table-list', getTableController);
+tableRouter.post('/remove-table', deleteTableController);
+
 
 export default tableRouter;

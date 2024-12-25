@@ -17,6 +17,10 @@ const TableSchema = new mongoose.Schema({
     },
     bookedBy: {
         type: String,
+    },
+    capacity: {
+        type: Number,
+        required: true,
     }
 })
 

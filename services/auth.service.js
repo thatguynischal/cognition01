@@ -58,11 +58,8 @@ export const resendVerification = async (verificationEmail) => {
         throw {status: 400, message: "No user found. Please check your email again."};
     }
 
-    console.log("user ho", user)
-
     const verificationRecord = await UserVerification.findOne({userId: user._id});
 
-    console.log("verificationRecord", verificationRecord);
     if (verificationRecord) {
         await UserVerification.deleteOne({_id: verificationRecord._id});
     }
