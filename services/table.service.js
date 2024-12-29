@@ -11,6 +11,11 @@ export const createTable = async (name, capacity) => {
         throw {status: 422, message: 'Capacity is required'};
     }
 
+    const existingTable = await Table.exists({ tableName: name });
+
+    if (existingTable) {
+        throw { status: 409, message: 'Table name already exists' }; // Conflict status
+    }
 
     const newTable =  await Table.create({
         tableName: name,

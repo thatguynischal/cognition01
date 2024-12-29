@@ -4,6 +4,7 @@ const TableSchema = new mongoose.Schema({
     tableName: {
         type: String,
         required: true,
+        unique: true,
     },
     createdAt: {
         type: Date,
