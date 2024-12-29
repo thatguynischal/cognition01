@@ -1,4 +1,6 @@
 import logger from './logger.js'
+import jwt from 'jsonwebtoken';
+import config from './config.js';
 
 const requestLogger = (request, response, next) => {
     logger.info('Method:', request.method)
@@ -38,5 +40,5 @@ const errorHandler = (error, request, response, next) => {
 export default {
     requestLogger,
     unknownEndpoint,
-    errorHandler
+    errorHandler,
 }

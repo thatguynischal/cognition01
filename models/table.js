@@ -8,20 +8,17 @@ const TableSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         required: true,
-    },
-    bookingStatus: {
-        type: String,
-    },
-    bookingDate: {
-        type: Date,
-    },
-    bookedBy: {
-        type: String,
+        default: Date.now,
     },
     capacity: {
         type: Number,
         required: true,
+    },
+    occupancy: {
+        type: String,
+        enum: ['available', 'booked', 'occupied'],
+        default: 'available',
     }
-})
+});
 
 export default mongoose.model('Table', TableSchema);

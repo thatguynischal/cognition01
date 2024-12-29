@@ -1,4 +1,5 @@
 import Table from "../models/table.js";
+import Bookings from "../models/tableBooking.js";
 
 export const createTable = async (name, capacity) => {
 
@@ -10,18 +11,12 @@ export const createTable = async (name, capacity) => {
         throw {status: 422, message: 'Capacity is required'};
     }
 
-    const createdAt = new Date();
-    const bookingStatus = false;
-    const bookingDate = null;
-    const bookedBy = null;
 
     const newTable =  await Table.create({
         tableName: name,
         capacity,
-        createdAt,
-        bookingStatus,
-        bookingDate,
-        bookedBy
+        createdAt : new Date() ,
+        occupancy : 'available',
     })
 
     return newTable;
@@ -49,3 +44,27 @@ export const updateTable = async (tableId, name, capacity) => {
     await Table.findByIdAndUpdate(tableId, {tableName: name}, {capacity: capacity});
 
 }
+
+export const newCustomer = async (tableId) => {
+    if (!tableId ) {
+        throw {status: 422, message: 'Please enter all the required fields.'};
+    }
+    await Table.findByIdAndUpdate(tableId, {occupancy: 'occupied'});
+
+    return true;
+};
+export const createBooking = async (tableId, bookedBy, contactInfo, bookingDate) => {
+    if (!tableId && !bookedBy && !contactInfo && !bookingDate) {
+        throw {status: 422, message: 'Please enter all the required fields.'};
+    }
+    const newBooking = new Bookings({
+        tableId,
+        bookedBy,
+        contactInfo,
+        bookingDate,
+    });
+    await newBooking.save();
+    await Table.findByIdAndUpdate(tableId, {occupancy: 'booked'});
+
+    return newBooking;
+};
