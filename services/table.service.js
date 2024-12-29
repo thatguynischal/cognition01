@@ -41,3 +41,11 @@ export const deleteTable = async (tableId) => {
     return true;
 
 }
+
+export const updateTable = async (tableId, name, capacity) => {
+    if (!tableId) {
+        throw {status: 422, message: 'Id is required'};
+    }
+    await Table.findByIdAndUpdate(tableId, {tableName: name}, {capacity: capacity});
+
+}

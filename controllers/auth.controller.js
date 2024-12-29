@@ -6,7 +6,8 @@ import {
     resetPassword,
     verifyUser
 } from '../services/auth.service.js';
-import {sendPasswordResetEmail, sendVerificationEmail, reSendVerificationEmail} from '../services/email.service.js';
+import {reSendVerificationEmail, sendPasswordResetEmail, sendVerificationEmail} from '../services/email.service.js';
+
 import helpers from '../utils/helpers.js';
 
 export const registerController = async (req, res) => {
@@ -24,7 +25,6 @@ export const registerController = async (req, res) => {
         }
     }
 };
-
 
 export const verifyController = async (req, res) => {
     try {
@@ -55,7 +55,6 @@ export const resendVerificationController = async (req, res) => {
         }
     }
 }
-
 
 export const loginController = async (req, res) => {
     try {
