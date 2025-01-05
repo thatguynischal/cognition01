@@ -83,3 +83,12 @@ export const createBooking = async (tableId, bookedBy, contactInfo, bookingDate)
 
     return newBooking;
 };
+
+export const getTablesInfo = async () => {
+    const totalTables = await Table.countDocuments();
+    const bookedTables = await Table.countDocuments({occupancy: 'booked'});
+    const availableTables = await Table.countDocuments({occupancy: 'available'});
+    const occupiedTables = await Table.countDocuments({occupancy: 'occupied'});
+
+    return {total_tables: totalTables, booked_tables: bookedTables, occupies_tables: occupiedTables, available_tables: availableTables};
+}

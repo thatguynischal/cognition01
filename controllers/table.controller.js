@@ -1,11 +1,5 @@
 import {
-    createTable,
-    deleteTable,
-    getAllTables,
-    updateTable,
-    createBooking,
-    newCustomer,
-    customerCheckout
+    createTable, deleteTable, getAllTables, updateTable, createBooking, newCustomer, customerCheckout, getTablesInfo
 } from '../services/table.service.js';
 import helpers from '../utils/helpers.js';
 
@@ -86,6 +80,16 @@ export const bookingController = async (req, res) => {
     try {
         const newBooking = await createBooking(tableId, bookedBy, contactInfo, bookingDate)
         return helpers.sendResponse(res, "success", 200, "Table has been booked successfully.", newBooking);
+    } catch (error) {
+        console.error(error);
+        return helpers.sendResponse(res, "error", 500, "Server error");
+    }
+}
+
+export const infoController = async (req, res) => {
+    try {
+        const info = await getTablesInfo();
+        return helpers.sendResponse(res, "success", 200, "Data fetched successfully.",  info);
     } catch (error) {
         console.error(error);
         return helpers.sendResponse(res, "error", 500, "Server error");
