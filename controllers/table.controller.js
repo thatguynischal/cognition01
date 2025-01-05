@@ -54,8 +54,10 @@ export const customerController = async (req, res) => {
     const {tableId} = req.body;
 
     try {
-        await newCustomer(tableId)
-        return helpers.sendResponse(res, "success", 200, "Table has been marked as occupied.");
+        const updatedTable = await newCustomer(tableId)
+        const io = req.app.get('io');
+        io.emit('tableStatusUpdated', {tableId, status: updatedTable}); // Changed to match the broadcast event
+        return helpers.sendResponse(res, "success", 200, "Table has been marked as occupied.", updatedTable);
     } catch (error) {
         console.error(error);
         return helpers.sendResponse(res, "error", 500, "Server error");
@@ -66,8 +68,10 @@ export const checkoutController = async (req, res) => {
     const {tableId} = req.body;
 
     try {
-        await customerCheckout(tableId)
-        return helpers.sendResponse(res, "success", 200, "Table has been marked as available.");
+        const updatedTable =await customerCheckout(tableId);
+        const io = req.app.get('io');
+        io.emit('tableStatusUpdated', {tableId, status: updatedTable}); // Changed to match the broadcast event
+        return helpers.sendResponse(res, "success", 200, "Table has been marked as available.", updatedTable);
     } catch (error) {
         console.error(error);
         return helpers.sendResponse(res, "error", 500, "Server error");
@@ -89,7 +93,7 @@ export const bookingController = async (req, res) => {
 export const infoController = async (req, res) => {
     try {
         const info = await getTablesInfo();
-        return helpers.sendResponse(res, "success", 200, "Data fetched successfully.",  info);
+        return helpers.sendResponse(res, "success", 200, "Data fetched successfully.", info);
     } catch (error) {
         console.error(error);
         return helpers.sendResponse(res, "error", 500, "Server error");

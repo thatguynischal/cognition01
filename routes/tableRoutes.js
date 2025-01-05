@@ -9,7 +9,6 @@ import {
     updateTableController
 } from "../controllers/table.controller.js";
 import {authMiddleware} from "../utils/auth.middleware.js";
-import {customerCheckout} from "../services/table.service.js";
 
 const tableRouter = Router();
 tableRouter.use(authMiddleware);

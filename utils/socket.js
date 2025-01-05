@@ -7,5 +7,10 @@ export default async function(io) {
         socket.on('disconnect', () => {
             logger.info('🔥: User disconnected:', socket.id);
         });
+
+        socket.on('tableStatusUpdate', (status) => {
+            logger.info('Table status updated:', status);
+            io.emit('tableStatusUpdated', status);
+        });
     });
 }

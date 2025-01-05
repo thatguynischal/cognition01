@@ -51,21 +51,37 @@ export const updateTable = async (tableId, name, capacity) => {
 }
 
 export const newCustomer = async (tableId) => {
-    if (!tableId ) {
-        throw {status: 422, message: 'Please enter all the required fields.'};
+    if (!tableId) {
+        throw { status: 422, message: 'Please enter all the required fields.' };
     }
-    await Table.findByIdAndUpdate(tableId, {occupancy: 'occupied'});
 
-    return true;
+    const updatedTable = await Table.findByIdAndUpdate(
+        tableId,
+        { occupancy: 'occupied' },
+    );
+
+    if (!updatedTable) {
+        throw { status: 404, message: 'Table not found.' };
+    }
+
+    return updatedTable;
 };
+
 
 export const customerCheckout = async (tableId) => {
     if (!tableId ) {
         throw {status: 422, message: 'Please enter all the required fields.'};
     }
-    await Table.findByIdAndUpdate(tableId, {occupancy: 'available'});
+    const updatedTable = await Table.findByIdAndUpdate(
+        tableId,
+        { occupancy: 'available' },
+    );
 
-    return true;
+    if (!updatedTable) {
+        throw { status: 404, message: 'Table not found.' };
+    }
+
+    return updatedTable;
 };
 
 export const createBooking = async (tableId, bookedBy, contactInfo, bookingDate) => {
