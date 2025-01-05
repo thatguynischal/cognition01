@@ -7,6 +7,7 @@ import {
     verifyUser
 } from '../services/auth.service.js';
 import {reSendVerificationEmail, sendPasswordResetEmail, sendVerificationEmail} from '../services/email.service.js';
+import agenda from "../utils/agenda.js";
 
 import helpers from '../utils/helpers.js';
 
@@ -26,10 +27,16 @@ export const registerController = async (req, res) => {
     }
 };
 
+
 export const verifyController = async (req, res) => {
     try {
         const {uniqueString} = req.params;
-        await verifyUser(uniqueString);
+       const user = await verifyUser(uniqueString);
+        await agenda.schedule('in a few seconds', 'send welcome email', { email: user.email });
+        // Schedule the congratulatory email to be sent one month later
+        const oneMonthLater = new Date();
+        oneMonthLater.setMonth(oneMonthLater.getMonth() + 1); // Add one month to the current date
+        await agenda.schedule(oneMonthLater, 'send congratulatory email', { email: user.email });
         return helpers.sendResponse(res, "success", 200, "Email verified successfully! You can now log in.");
     } catch (error) {
         console.error(error);

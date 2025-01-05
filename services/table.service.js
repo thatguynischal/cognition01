@@ -58,6 +58,16 @@ export const newCustomer = async (tableId) => {
 
     return true;
 };
+
+export const customerCheckout = async (tableId) => {
+    if (!tableId ) {
+        throw {status: 422, message: 'Please enter all the required fields.'};
+    }
+    await Table.findByIdAndUpdate(tableId, {occupancy: 'available'});
+
+    return true;
+};
+
 export const createBooking = async (tableId, bookedBy, contactInfo, bookingDate) => {
     if (!tableId && !bookedBy && !contactInfo && !bookingDate) {
         throw {status: 422, message: 'Please enter all the required fields.'};

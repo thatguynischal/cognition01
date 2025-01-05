@@ -42,3 +42,19 @@ export const sendPasswordResetEmail = async (email, resetToken) => {
         html: `<p>You requested a password reset. Click <a href="${resetUrl}">here</a> to reset your password.</p><p>This link is valid for 1 hour.</p>`,
     });
 };
+
+export const welcomeEmail = async (email) => {
+    await transporter.sendMail({
+        to: email,
+        subject: "Welcome to Our Platform",
+        html: `<p>Welcome to our platform. Glad to have you aboard.</p>`,
+    });
+};
+
+export const congratulatoryEmail = async (email) => {
+    await transporter.sendMail({
+        to: email,
+        subject: "Congratulations on One Month with Us!",
+        html: `<p>Congratulations! You've been with us for one month. Thank you for being part of our platform.</p>`,
+    });
+};
