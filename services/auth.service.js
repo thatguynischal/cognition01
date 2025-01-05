@@ -48,8 +48,8 @@ export const verifyUser = async (uniqueString) => {
     await User.updateOne({_id: verificationRecord.userId}, {verified: true});
     await UserVerification.deleteOne({_id: verificationRecord._id});
 
-    return true;
-};
+    const user = await User.findById(verificationRecord.userId);
+    return user;};
 
 export const resendVerification = async (verificationEmail) => {
 

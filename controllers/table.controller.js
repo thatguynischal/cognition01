@@ -4,7 +4,8 @@ import {
     getAllTables,
     updateTable,
     createBooking,
-    newCustomer
+    newCustomer,
+    customerCheckout
 } from '../services/table.service.js';
 import helpers from '../utils/helpers.js';
 
@@ -56,10 +57,10 @@ export const updateTableController = async (req, res) => {
 }
 
 export const customerController = async (req, res) => {
-    const {tableId } = req.body;
+    const {tableId} = req.body;
 
     try {
-        const newBooking= await newCustomer(tableId)
+        await newCustomer(tableId)
         return helpers.sendResponse(res, "success", 200, "Table has been marked as occupied.");
     } catch (error) {
         console.error(error);
@@ -67,11 +68,23 @@ export const customerController = async (req, res) => {
     }
 }
 
-export const bookingController = async (req, res) => {
-    const {tableId, bookedBy, contactInfo, bookingDate } = req.body;
+export const checkoutController = async (req, res) => {
+    const {tableId} = req.body;
 
     try {
-       const newBooking= await createBooking(tableId, bookedBy, contactInfo, bookingDate)
+        await customerCheckout(tableId)
+        return helpers.sendResponse(res, "success", 200, "Table has been marked as available.");
+    } catch (error) {
+        console.error(error);
+        return helpers.sendResponse(res, "error", 500, "Server error");
+    }
+}
+
+export const bookingController = async (req, res) => {
+    const {tableId, bookedBy, contactInfo, bookingDate} = req.body;
+
+    try {
+        const newBooking = await createBooking(tableId, bookedBy, contactInfo, bookingDate)
         return helpers.sendResponse(res, "success", 200, "Table has been booked successfully.", newBooking);
     } catch (error) {
         console.error(error);

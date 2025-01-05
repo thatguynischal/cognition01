@@ -1,6 +1,7 @@
 import {Router} from "express";
 import {
     bookingController,
+    checkoutController,
     customerController,
     deleteTableController,
     getTableController,
@@ -19,6 +20,7 @@ tableRouter.post('/remove-table', deleteTableController);
 tableRouter.post('/update-table', updateTableController);
 tableRouter.post('/new-customer', customerController);
 tableRouter.post('/book-a-table', bookingController);
+tableRouter.post('/customer-checkout', checkoutController);
 
 
 export default tableRouter;
