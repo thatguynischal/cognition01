@@ -6,7 +6,12 @@ import {Server} from "socket.io";
 import Socket from "./utils/socket.js";
 
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+   cors: {
+       origin: '*',
+   }
+
+});
 
 server.listen(config.PORT, () => {
     Socket(io);
